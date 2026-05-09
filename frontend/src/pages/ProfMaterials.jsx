@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Upload, Trash2, FileText } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
 const ProfMaterials = () => {
   const [materials, setMaterials] = useState([]);
   const [courses, setCourses] = useState([]);
@@ -8,6 +9,7 @@ const ProfMaterials = () => {
   const [description, setDescription] = useState('');
   const [course, setCourse] = useState('');
   const [file, setFile] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const fetchData = async () => {
     try {
       const [matRes, crsRes] = await Promise.all([
@@ -45,14 +47,19 @@ const ProfMaterials = () => {
       alert('Error uploading file');
     }
   };
-  const handleDelete = async (id) => {
-    if(window.confirm('Delete this material?')) {
-      try {
-        await axios.delete(`http://localhost:5000/api/professor/studymaterial/${id}`);
-        fetchData();
-      } catch {
-        alert('Error deleting');
-      }
+  const handleDelete = (id) => {
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/professor/studymaterial/${deleteTarget}`);
+      fetchData();
+    } catch {
+      alert('Error deleting');
+    } finally {
+      setDeleteTarget(null);
     }
   };
   return (
@@ -111,6 +118,16 @@ const ProfMaterials = () => {
         ))}
         {materials.length === 0 && <p style={{ gridColumn: '1/-1' }}>No materials uploaded yet.</p>}
       </div>
+
+      <ConfirmModal 
+        isOpen={!!deleteTarget}
+        title="Delete Material"
+        message="Are you sure you want to delete this study material? This action cannot be undone."
+        confirmText="Delete Material"
+        isDanger={true}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

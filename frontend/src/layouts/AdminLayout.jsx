@@ -8,6 +8,8 @@ import AdminCourses from '../pages/AdminCourses';
 import AdminSubjects from '../pages/AdminSubjects';
 import NoticeBoard from '../pages/NoticeBoard';
 import ManageLeaves from '../pages/ManageLeaves';
+import AdminProfile from '../pages/AdminProfile';
+
 const AdminLayout = () => {
   const routes = [
     { path: '/admin/dashboard', name: 'Dashboard' },
@@ -17,13 +19,18 @@ const AdminLayout = () => {
     { path: '/admin/subjects', name: 'Subjects' },
     { path: '/admin/notices', name: 'Notice Board' },
     { path: '/admin/leaves', name: 'Leave Requests' },
+    { path: '/admin/profile', name: 'Profile' },
   ];
   return (
-    <div className="flex" style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
-      <Sidebar routes={routes} />
-      <div className="flex-1" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <TopNav title="System Administration" />
-        <div style={{ padding: '2rem', overflowY: 'auto' }}>
+    <div style={{ display: 'flex', height: '100vh', maxHeight: '100vh', width: '100vw', overflow: 'hidden', background: 'var(--bg-primary)' }}>
+      <div style={{ flexShrink: 0, height: '100vh', overflowY: 'auto' }}>
+        <Sidebar routes={routes} />
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 50, flexShrink: 0 }}>
+          <TopNav title="System Administration" />
+        </div>
+        <div style={{ padding: '2rem', flex: 1, overflowY: 'auto', height: '100%' }}>
           <Routes>
             <Route path="/" element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
@@ -33,6 +40,7 @@ const AdminLayout = () => {
             <Route path="subjects" element={<AdminSubjects />} />
             <Route path="notices" element={<NoticeBoard />} />
             <Route path="leaves" element={<ManageLeaves />} />
+            <Route path="profile" element={<AdminProfile />} />
             <Route path="*" element={<AdminDashboard />} />
           </Routes>
         </div>

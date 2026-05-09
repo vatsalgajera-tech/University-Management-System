@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BookOpen, Edit2, Trash2 } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
+import { useToast } from '../context/ToastContext';
 const AdminCourses = () => {
+  const { showToast } = useToast();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterDuration, setFilterDuration] = useState('');
   const [showCourseForm, setShowCourseForm] = useState(false);
   const [courseFormData, setCourseFormData] = useState({ name: '', description: '', duration: '' });
   const [editingCourseId, setEditingCourseId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   useEffect(() => {
     fetchData();
   }, []);
@@ -33,17 +39,22 @@ const AdminCourses = () => {
       setCourseFormData({ name: '', description: '', duration: '' });
       fetchData();
     } catch {
-      alert('Error saving course');
+      showToast('Error saving course', 'error');
     }
   };
-  const handleDeleteCourse = async (id) => {
-    if (window.confirm('Warning: This may affect related subjects and students. Proceed?')) {
-      try {
-        await axios.delete(`http://localhost:5000/api/admin/courses/${id}`);
-        fetchData();
-      } catch {
-        alert('Error deleting course');
-      }
+  const handleDeleteCourse = (id) => {
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/admin/courses/${deleteTarget}`);
+      fetchData();
+    } catch {
+      showToast('Error deleting course', 'error');
+    } finally {
+      setDeleteTarget(null);
     }
   };
   const handleEditCourse = (course) => {
@@ -51,13 +62,41 @@ const AdminCourses = () => {
     setEditingCourseId(course._id);
     setShowCourseForm(true);
   };
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          (course.description && course.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesDuration = filterDuration ? course.duration.toString() === filterDuration : true;
+    return matchesSearch && matchesDuration;
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4" style={{ flexWrap: 'wrap', gap: '1rem' }}>
         <h2>Manage Courses</h2>
-        <button className="btn btn-primary" onClick={() => { setShowCourseForm(!showCourseForm); setEditingCourseId(null); setCourseFormData({ name: '', description: '', duration: '' }); }}>
-          <BookOpen size={18} style={{ marginRight: '0.5rem' }} /> Add Course
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <input 
+            type="text" 
+            placeholder="Search courses..." 
+            className="form-input" 
+            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }} 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+          <select 
+            className="form-input" 
+            style={{ width: '180px', marginBottom: 0, padding: '0.5rem' }}
+            value={filterDuration}
+            onChange={(e) => setFilterDuration(e.target.value)}
+          >
+            <option value="">All Durations</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+          </select>
+          <button className="btn btn-primary" onClick={() => { setShowCourseForm(!showCourseForm); setEditingCourseId(null); setCourseFormData({ name: '', description: '', duration: '' }); }}>
+            <BookOpen size={18} style={{ marginRight: '0.5rem' }} /> Add Course
+          </button>
+        </div>
       </div>
       {showCourseForm && (
         <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
@@ -65,15 +104,15 @@ const AdminCourses = () => {
           <form onSubmit={handleCourseSubmit} className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
               <label className="form-label">Course Name</label>
-              <input type="text" className="form-input" value={courseFormData.name} onChange={(e) => setCourseFormData({ ...courseFormData, name: e.target.value })} required />
+              <input type="text" className="form-input" placeholder="Enter Course Name" value={courseFormData.name} onChange={(e) => setCourseFormData({ ...courseFormData, name: e.target.value })} required />
             </div>
             <div className="form-group">
               <label className="form-label">Duration</label>
-              <input type="text" className="form-input" value={courseFormData.duration} onChange={(e) => setCourseFormData({ ...courseFormData, duration: e.target.value })} required />
+              <input type="text" className="form-input" placeholder="Enter Duration" value={courseFormData.duration} onChange={(e) => setCourseFormData({ ...courseFormData, duration: e.target.value })} required />
             </div>
             <div className="form-group" style={{ gridColumn: 'span 2' }}>
               <label className="form-label">Description</label>
-              <textarea className="form-input" rows="3" value={courseFormData.description} onChange={(e) => setCourseFormData({ ...courseFormData, description: e.target.value })}></textarea>
+              <textarea className="form-input" rows="3" placeholder="Enter Description" value={courseFormData.description} onChange={(e) => setCourseFormData({ ...courseFormData, description: e.target.value })}></textarea>
             </div>
             <div style={{ gridColumn: 'span 2' }}>
               <button type="submit" className="btn btn-primary" style={{ marginRight: '1rem' }}>Save changes</button>
@@ -94,7 +133,7 @@ const AdminCourses = () => {
           </thead>
           <tbody>
             {loading ? <tr><td colSpan="4" className="text-center">Loading...</td></tr> :
-              courses.map(course => (
+              filteredCourses.map(course => (
                 <tr key={course._id}>
                   <td>{course.name}</td>
                   <td>{course.duration}</td>
@@ -105,10 +144,20 @@ const AdminCourses = () => {
                   </td>
                 </tr>
               ))}
-            {courses.length === 0 && !loading && <tr><td colSpan="4" className="text-center">No Courses found.</td></tr>}
+            {filteredCourses.length === 0 && !loading && <tr><td colSpan="4" className="text-center">No Courses found matching filters.</td></tr>}
           </tbody>
         </table>
       </div>
+
+      <ConfirmModal 
+        isOpen={!!deleteTarget}
+        title="Delete Course"
+        message="Warning: This may affect related subjects and students. Proceed?"
+        confirmText="Delete Course"
+        isDanger={true}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

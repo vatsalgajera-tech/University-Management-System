@@ -17,7 +17,7 @@ const StudentLayout = () => {
     { path: '/student/notices', name: 'Notice Board' },
   ];
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
       <StudentNavbar routes={routes} />
       <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
         <Routes>

@@ -5,10 +5,11 @@ const upload = require('../middleware/uploadMiddleware');
 const {
   getDashboardStats, getMyStudents, getNotices,
   getStudentLeaves, respondToLeave, addAttendance,
-  uploadStudyMaterial, getStudyMaterials, deleteStudyMaterial, getMyAssignedCourses
+  uploadStudyMaterial, getStudyMaterials, deleteStudyMaterial, getMyAssignedCourses, updateProfile
 } = require('../controllers/professorController');
 router.use(protect, professorOnly);
 router.get('/dashboard', getDashboardStats);
+router.put('/profile', updateProfile);
 router.get('/students', getMyStudents);
 router.get('/notices', getNotices);
 router.get('/courses', getMyAssignedCourses);

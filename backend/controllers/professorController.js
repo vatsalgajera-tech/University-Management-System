@@ -6,15 +6,33 @@ const User = require('../models/User');
 const Course = require('../models/Course');
 const getDashboardStats = async (req, res) => {
   try {
-    const profId = req.user._id;
     const assignedCourses = req.user.assignedCourses;
+
+    // Basic counts
     const studentsCount = await User.countDocuments({ role: 'Student', enrolledCourse: { $in: assignedCourses } });
     const noticesCount = await Notice.countDocuments({ audience: { $in: ['All', 'Professor'] } });
-    const leavesCount = await Leave.countDocuments({
-      student: { $in: await User.find({ enrolledCourse: { $in: assignedCourses } }).distinct('_id') },
-      status: 'Pending'
+    const studentIds = await User.find({ enrolledCourse: { $in: assignedCourses } }).distinct('_id');
+    const leavesCount = await Leave.countDocuments({ student: { $in: studentIds }, status: 'Pending' });
+
+    // Chart 1: Student distribution by course
+    const students = await User.find({ role: 'Student', enrolledCourse: { $in: assignedCourses } })
+      .populate('enrolledCourse', 'name');
+    const courseMap = {};
+    students.forEach(s => {
+      const name = s.enrolledCourse?.name || 'Unknown';
+      courseMap[name] = (courseMap[name] || 0) + 1;
     });
-    res.json({ studentsCount, noticesCount, leavesCount });
+    const studentDistribution = Object.entries(courseMap).map(([name, value]) => ({ name, value }));
+
+    // Chart 2: Leave status breakdown
+    const allLeaves = await Leave.find({ student: { $in: studentIds } });
+    const leaveMap = { Pending: 0, Approved: 0, Rejected: 0 };
+    allLeaves.forEach(l => { leaveMap[l.status] = (leaveMap[l.status] || 0) + 1; });
+    const leaveStatus = Object.entries(leaveMap)
+      .filter(([, value]) => value > 0)
+      .map(([name, value]) => ({ name, value }));
+
+    res.json({ studentsCount, noticesCount, leavesCount, studentDistribution, leaveStatus });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -142,8 +160,24 @@ const getMyAssignedCourses = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 }
+const updateProfile = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const prof = await User.findById(req.user._id);
+    if (!prof) return res.status(404).json({ message: 'User not found' });
+    if (email) prof.email = email;
+    if (password) {
+      const bcrypt = require('bcrypt');
+      prof.password = await bcrypt.hash(password, 10);
+    }
+    await prof.save();
+    res.json({ message: 'Profile updated successfully', email: prof.email, name: prof.name });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
   getDashboardStats, getMyStudents, getNotices,
   getStudentLeaves, respondToLeave, addAttendance,
-  uploadStudyMaterial, getStudyMaterials, deleteStudyMaterial, getMyAssignedCourses
+  uploadStudyMaterial, getStudyMaterials, deleteStudyMaterial, getMyAssignedCourses, updateProfile
 };

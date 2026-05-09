@@ -2,10 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Calendar, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
+import { useToast } from '../context/ToastContext';
 const ManageLeaves = () => {
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const getApiEndpoint = () => {
     return user.role === 'Admin'
       ? 'http://localhost:5000/api/admin/leaves'
@@ -32,16 +36,22 @@ const ManageLeaves = () => {
       await axios.put(endpoint, { status });
       fetchLeaves();
     } catch {
-      alert('Error updating leave status');
+      showToast('Error updating leave status', 'error');
     }
   };
-  const handleDeleteLeave = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this leave request?')) return;
+  const handleDeleteLeave = (id) => {
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/leaves/${id}`);
+      await axios.delete(`http://localhost:5000/api/admin/leaves/${deleteTarget}`);
       fetchLeaves();
     } catch {
-      alert('Error deleting leave request');
+      showToast('Error deleting leave request', 'error');
+    } finally {
+      setDeleteTarget(null);
     }
   };
   const formatDate = (dateString) => {
@@ -108,6 +118,16 @@ const ManageLeaves = () => {
           </tbody>
         </table>
       </div>
+      
+      <ConfirmModal 
+        isOpen={!!deleteTarget}
+        title="Delete Leave Request"
+        message="Are you sure you want to delete this leave request? This action cannot be undone."
+        confirmText="Delete"
+        isDanger={true}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

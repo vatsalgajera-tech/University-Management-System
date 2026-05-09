@@ -8,30 +8,37 @@ import ProfAttendance from '../pages/ProfAttendance';
 import ProfMaterials from '../pages/ProfMaterials';
 import ManageLeaves from '../pages/ManageLeaves';
 import NoticeBoard from '../pages/NoticeBoard';
+import ProfProfile from '../pages/ProfProfile';
 const ProfessorLayout = () => {
   const routes = [
-    { path: '/professor/dashboard', name: 'Dashboard' },
-    { path: '/professor/students', name: 'My Students' },
-    { path: '/professor/attendance', name: 'Attendance' },
+    { path: '/professor/dashboard',   name: 'Dashboard' },
+    { path: '/professor/students',    name: 'My Students' },
+    { path: '/professor/attendance',  name: 'Attendance' },
     { path: '/professor/studymaterial', name: 'Study Material' },
-    { path: '/professor/leaves', name: 'Leave Approvals' },
-    { path: '/professor/notices', name: 'Notice Board' },
+    { path: '/professor/leaves',      name: 'Leave Approvals' },
+    { path: '/professor/notices',     name: 'Notice Board' },
+    { path: '/professor/profile',     name: 'Profile' },
   ];
   return (
-    <div className="flex" style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
-      <Sidebar routes={routes} />
-      <div className="flex-1" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <TopNav title="Professor Portal" />
-        <div style={{ padding: '2rem', overflowY: 'auto' }}>
+    <div style={{ display: 'flex', height: '100vh', maxHeight: '100vh', width: '100vw', overflow: 'hidden', background: 'var(--bg-primary)' }}>
+      <div style={{ flexShrink: 0, height: '100vh', overflowY: 'auto' }}>
+        <Sidebar routes={routes} />
+      </div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+        <div style={{ position: 'sticky', top: 0, zIndex: 50, flexShrink: 0 }}>
+          <TopNav title="Professor Portal" />
+        </div>
+        <div style={{ padding: '2rem', flex: 1, overflowY: 'auto', height: '100%' }}>
           <Routes>
             <Route path="/" element={<Navigate to="dashboard" replace />} />
-            <Route path="dashboard" element={<ProfDashboard />} />
-            <Route path="students" element={<ProfStudents />} />
-            <Route path="attendance" element={<ProfAttendance />} />
+            <Route path="dashboard"     element={<ProfDashboard />} />
+            <Route path="students"      element={<ProfStudents />} />
+            <Route path="attendance"    element={<ProfAttendance />} />
             <Route path="studymaterial" element={<ProfMaterials />} />
-            <Route path="leaves" element={<ManageLeaves />} />
-            <Route path="notices" element={<NoticeBoard />} />
-            <Route path="*" element={<ProfDashboard />} />
+            <Route path="leaves"        element={<ManageLeaves />} />
+            <Route path="notices"       element={<NoticeBoard />} />
+            <Route path="profile"       element={<ProfProfile />} />
+            <Route path="*"             element={<ProfDashboard />} />
           </Routes>
         </div>
       </div>

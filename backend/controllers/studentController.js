@@ -3,15 +3,43 @@ const Notice = require('../models/Notice');
 const Leave = require('../models/Leave');
 const Attendance = require('../models/Attendance');
 const StudyMaterial = require('../models/StudyMaterial');
+const Subject = require('../models/Subject');
 const getDashboardStats = async (req, res) => {
   try {
     const courseId = req.user.enrolledCourse;
-    const attendanceCount = await Attendance.countDocuments({ student: req.user._id, status: 'Present' });
+
+    // Counts
+    const presentCount = await Attendance.countDocuments({ student: req.user._id, status: 'Present' });
     const totalAttendance = await Attendance.countDocuments({ student: req.user._id });
-    const attendancePercentage = totalAttendance > 0 ? ((attendanceCount / totalAttendance) * 100).toFixed(2) : 0;
+    const absentCount = totalAttendance - presentCount;
+    const attendancePercentage = totalAttendance > 0 ? ((presentCount / totalAttendance) * 100).toFixed(2) : 0;
     const noticesCount = await Notice.countDocuments({ audience: { $in: ['All', 'Student'] } });
     const studyMaterialsCount = await StudyMaterial.countDocuments({ course: courseId });
-    res.json({ attendancePercentage, noticesCount, studyMaterialsCount });
+
+    // Chart 1: Attendance breakdown
+    const attendanceData = [
+      { name: 'Present', value: presentCount },
+      { name: 'Absent',  value: absentCount  },
+    ].filter(d => d.value > 0);
+
+    // Chart 2: Leave status breakdown
+    const leaves = await Leave.find({ student: req.user._id });
+    const leaveMap = { Pending: 0, Approved: 0, Rejected: 0 };
+    leaves.forEach(l => { leaveMap[l.status] = (leaveMap[l.status] || 0) + 1; });
+    const leaveData = Object.entries(leaveMap)
+      .filter(([, v]) => v > 0)
+      .map(([name, value]) => ({ name, value }));
+
+    // Subject list for enrolled course
+    const subjects = await Subject.find({ course: courseId })
+      .populate('professor', 'name')
+      .select('name professor');
+    const subjectList = subjects.map(s => ({
+      name: s.name,
+      professor: s.professor?.name || 'Unassigned',
+    }));
+
+    res.json({ attendancePercentage, noticesCount, studyMaterialsCount, attendanceData, leaveData, subjectList });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -79,7 +79,9 @@ const ProfAttendance = () => {
           <table className="data-table">
             <thead>
               <tr>
+                <th>Enrollment No.</th>
                 <th>Student Name</th>
+                <th>Mobile</th>
                 <th>Status</th>
                 <th>Toggle</th>
               </tr>
@@ -87,7 +89,9 @@ const ProfAttendance = () => {
             <tbody>
               {currStudents.map(student => (
                 <tr key={student._id}>
+                  <td>{student.enrollmentNumber || '—'}</td>
                   <td>{student.name}</td>
+                  <td>{student.mobileNumber || '—'}</td>
                   <td>
                     <span style={{
                       color: attendance[student._id] === 'Present' ? 'var(--success)' : 'var(--danger)',
@@ -107,7 +111,7 @@ const ProfAttendance = () => {
                   </td>
                 </tr>
               ))}
-              {currStudents.length === 0 && <tr><td colSpan="3" className="text-center">No students in this course.</td></tr>}
+              {currStudents.length === 0 && <tr><td colSpan="5" className="text-center">No students in this course.</td></tr>}
             </tbody>
           </table>
           {currStudents.length > 0 && (

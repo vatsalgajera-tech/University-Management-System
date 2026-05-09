@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FileText, Edit2, Trash2 } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
 const AdminSubjects = () => {
   const [subjects, setSubjects] = useState([]);
   const [courses, setCourses] = useState([]);
   const [professors, setProfessors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCourse, setFilterCourse] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', course: '', professor: '' });
   const [editingId, setEditingId] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   useEffect(() => {
     fetchData();
   }, []);
@@ -44,14 +48,19 @@ const AdminSubjects = () => {
       alert('Error saving subject');
     }
   };
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this subject?')) {
-      try {
-        await axios.delete(`http://localhost:5000/api/admin/subjects/${id}`);
-        fetchData();
-      } catch {
-        alert('Error deleting subject');
-      }
+  const handleDelete = (id) => {
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/admin/subjects/${deleteTarget}`);
+      fetchData();
+    } catch {
+      alert('Error deleting subject');
+    } finally {
+      setDeleteTarget(null);
     }
   };
   const handleEdit = (sub) => {
@@ -59,13 +68,38 @@ const AdminSubjects = () => {
     setEditingId(sub._id);
     setShowForm(true);
   };
+  const filteredSubjects = subjects.filter(sub => {
+    const matchesSearch = sub.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCourse = filterCourse ? (sub.course?._id === filterCourse || sub.course === filterCourse) : true;
+    return matchesSearch && matchesCourse;
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4" style={{ flexWrap: 'wrap', gap: '1rem' }}>
         <h2>Manage Subjects</h2>
-        <button className="btn btn-primary" onClick={() => { setShowForm(!showForm); setEditingId(null); setFormData({ name: '', course: '', professor: '' }); }}>
-          <FileText size={18} style={{ marginRight: '0.5rem' }} /> Add Subject
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <input 
+            type="text" 
+            placeholder="Search subjects..." 
+            className="form-input" 
+            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }} 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+          <select 
+            className="form-input" 
+            style={{ width: '180px', marginBottom: 0, padding: '0.5rem' }}
+            value={filterCourse}
+            onChange={(e) => setFilterCourse(e.target.value)}
+          >
+            <option value="">All Courses</option>
+            {courses.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+          </select>
+          <button className="btn btn-primary" onClick={() => { setShowForm(!showForm); setEditingId(null); setFormData({ name: '', course: '', professor: '' }); }}>
+            <FileText size={18} style={{ marginRight: '0.5rem' }} /> Add Subject
+          </button>
+        </div>
       </div>
       {showForm && (
         <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
@@ -108,7 +142,7 @@ const AdminSubjects = () => {
           </thead>
           <tbody>
             {loading ? <tr><td colSpan="4" className="text-center">Loading...</td></tr> :
-             subjects.map(sub => (
+             filteredSubjects.map(sub => (
               <tr key={sub._id}>
                 <td>{sub.name}</td>
                 <td>{sub.course?.name || 'Unknown'}</td>
@@ -119,10 +153,20 @@ const AdminSubjects = () => {
                 </td>
               </tr>
             ))}
-            {subjects.length === 0 && !loading && <tr><td colSpan="4" className="text-center">No Subjects found.</td></tr>}
+            {filteredSubjects.length === 0 && !loading && <tr><td colSpan="4" className="text-center">No Subjects found matching filters.</td></tr>}
           </tbody>
         </table>
       </div>
+
+      <ConfirmModal 
+        isOpen={!!deleteTarget}
+        title="Delete Subject"
+        message="Are you sure you want to delete this subject? This action cannot be undone."
+        confirmText="Delete Subject"
+        isDanger={true}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

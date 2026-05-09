@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   admissionDate: { type: Date },
   parentName: { type: String },
   parentContact: { type: String },
+  isHandicapped: { type: Boolean, default: false },
   assignedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
 }, { timestamps: true });
 module.exports = mongoose.model('User', userSchema);

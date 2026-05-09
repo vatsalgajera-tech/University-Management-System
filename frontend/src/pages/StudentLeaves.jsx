@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Send } from 'lucide-react';
+import { useToast } from '../context/ToastContext';
 const StudentLeaves = () => {
   const [leaves, setLeaves] = useState([]);
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ date: '', reason: '' });
@@ -26,9 +28,9 @@ const StudentLeaves = () => {
       setShowForm(false);
       setFormData({ date: '', reason: '' });
       fetchLeaves();
-      alert('Leave request submitted');
+      showToast('Leave request submitted successfully!', 'success');
     } catch {
-      alert('Error submitting request');
+      showToast('Error submitting leave request', 'error');
     }
   };
   const formatDate = (dateString) => {

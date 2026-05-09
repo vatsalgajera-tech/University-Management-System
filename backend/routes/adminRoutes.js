@@ -5,7 +5,7 @@ const {
   getDashboardStats,
   getUsers, createUser, updateUser, deleteUser,
   getCourses, createCourse, updateCourse, deleteCourse,
-  getSubjects, createSubject, updateSubject, deleteSubject,
+  getSubjects, getSubjectsByCourse, createSubject, updateSubject, deleteSubject,
   getNotices, createNotice, deleteNotice,
   getAllLeaves, respondToLeave, deleteLeave
 } = require('../controllers/adminController');
@@ -26,6 +26,7 @@ router.route('/courses/:id')
 router.route('/subjects')
   .get(getSubjects)
   .post(createSubject);
+router.get('/subjects/by-course/:courseId', getSubjectsByCourse);
 router.route('/subjects/:id')
   .put(updateSubject)
   .delete(deleteSubject);

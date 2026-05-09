@@ -4,13 +4,57 @@ const Course = require('../models/Course');
 const Subject = require('../models/Subject');
 const Notice = require('../models/Notice');
 const Leave = require('../models/Leave');
+
 const bcrypt = require('bcrypt');
 const getDashboardStats = async (req, res) => {
   try {
     const totalStudents = await User.countDocuments({ role: 'Student' });
     const totalProfessors = await User.countDocuments({ role: 'Professor' });
     const totalCourses = await Course.countDocuments();
-    res.json({ totalStudents, totalProfessors, totalCourses });
+
+    // Foolproof in-memory aggregation
+    const courses = await Course.find();
+    const students = await User.find({ role: 'Student' });
+    const subjects = await Subject.find();
+    const leaves = await Leave.find();
+
+    const courseMap = {};
+    courses.forEach(c => courseMap[c._id.toString()] = c.name);
+
+    // 1. Student Distribution
+    const studentCountMap = {};
+    students.forEach(s => {
+      const courseId = s.enrolledCourse ? s.enrolledCourse.toString() : 'Unassigned';
+      const courseName = courseMap[courseId] || 'Unassigned';
+      studentCountMap[courseName] = (studentCountMap[courseName] || 0) + 1;
+    });
+    const studentDistribution = Object.keys(studentCountMap).map(name => ({
+      name, value: studentCountMap[name]
+    }));
+
+    // 2. Subjects per Course
+    const subjectCountMap = {};
+    subjects.forEach(s => {
+      const courseId = s.course ? s.course.toString() : 'Unassigned';
+      const courseName = courseMap[courseId] || 'Unassigned';
+      subjectCountMap[courseName] = (subjectCountMap[courseName] || 0) + 1;
+    });
+    const subjectsPerCourse = Object.keys(subjectCountMap).map(name => ({
+      name, count: subjectCountMap[name]
+    }));
+
+    // 3. Leave Status
+    const leaveStatusMap = { 'Pending': 0, 'Approved': 0, 'Rejected': 0 };
+    leaves.forEach(l => {
+      if (leaveStatusMap[l.status] !== undefined) {
+        leaveStatusMap[l.status]++;
+      }
+    });
+    const leaveStatus = Object.keys(leaveStatusMap).map(name => ({
+      name, value: leaveStatusMap[name]
+    }));
+
+    res.json({ totalStudents, totalProfessors, totalCourses, studentDistribution, subjectsPerCourse, leaveStatus });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -28,7 +72,8 @@ const getUsers = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const {
-      name, email, password, role, enrolledCourse, assignedCourses
+      name, email, password, role, enrolledCourse, assignedCourses,
+      gender, dateOfBirth, mobileNumber, category, address, parentName, parentContact, isHandicapped
     } = req.body;
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
@@ -37,9 +82,19 @@ const createUser = async (req, res) => {
     let studentData = {};
     if (role === 'Student') {
       const course = await Course.findById(enrolledCourse);
-      const enrollmentNumber = Math.floor(100000000000 + Math.random() * 900000000000).toString();
       const admissionDate = new Date();
       const startYear = admissionDate.getFullYear();
+      
+      // Generate Sequential ID
+      const yearPrefix = startYear.toString().slice(-2);
+      let courseShort = 'UNK';
+      if (course && course.name) {
+        courseShort = course.name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 5);
+      }
+      const count = await User.countDocuments({ role: 'Student', enrolledCourse: enrolledCourse });
+      const sequentialStr = (count + 1).toString().padStart(3, '0');
+      const enrollmentNumber = `${yearPrefix}${courseShort}${sequentialStr}`;
+
       let durationYears = 1;
       if (course && course.duration) {
         const match = course.duration.match(/(\d+)/);
@@ -55,8 +110,8 @@ const createUser = async (req, res) => {
       const endYear = startYear + durationYears;
       const yearStr = `${startYear} - ${endYear}`;
       studentData = {
-        enrolledCourse,
-        enrollmentNumber, admissionDate, year: yearStr
+        enrolledCourse, enrollmentNumber, admissionDate, year: yearStr,
+        gender, dateOfBirth, mobileNumber, category, address, parentName, parentContact, isHandicapped: isHandicapped === 'true' || isHandicapped === true
       };
     }
     const newUser = new User({
@@ -64,7 +119,12 @@ const createUser = async (req, res) => {
       assignedCourses: role === 'Professor' ? assignedCourses : [],
       ...studentData
     });
-    await newUser.save();
+    if (role === 'Professor' && req.body.selectedSubjects?.length > 0) {
+      await Subject.updateMany(
+        { _id: { $in: req.body.selectedSubjects } },
+        { professor: newUser._id }
+      );
+    }
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -82,16 +142,31 @@ const updateUser = async (req, res) => {
     }
     if (user.role === 'Student') {
       if (req.body.enrolledCourse !== undefined) user.enrolledCourse = req.body.enrolledCourse;
+      if (req.body.gender !== undefined) user.gender = req.body.gender;
+      if (req.body.dateOfBirth !== undefined) user.dateOfBirth = req.body.dateOfBirth;
+      if (req.body.mobileNumber !== undefined) user.mobileNumber = req.body.mobileNumber;
+      if (req.body.category !== undefined) user.category = req.body.category;
+      if (req.body.address !== undefined) user.address = req.body.address;
+      if (req.body.parentName !== undefined) user.parentName = req.body.parentName;
+      if (req.body.parentContact !== undefined) user.parentContact = req.body.parentContact;
+      if (req.body.isHandicapped !== undefined) user.isHandicapped = req.body.isHandicapped === 'true' || req.body.isHandicapped === true;
+
       if (!user.enrollmentNumber) {
         const course = await Course.findById(user.enrolledCourse);
-        if (!user.enrollmentNumber) {
-          user.enrollmentNumber = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+        const startYear = (user.admissionDate || new Date()).getFullYear();
+        const yearPrefix = startYear.toString().slice(-2);
+        let courseShort = 'UNK';
+        if (course && course.name) {
+          courseShort = course.name.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 5);
         }
+        const count = await User.countDocuments({ role: 'Student', enrolledCourse: user.enrolledCourse, enrollmentNumber: { $exists: true } });
+        const sequentialStr = (count + 1).toString().padStart(3, '0');
+        user.enrollmentNumber = `${yearPrefix}${courseShort}${sequentialStr}`;
+
         if (!user.admissionDate) {
           user.admissionDate = new Date();
         }
         if (!user.year) {
-          const startYear = (user.admissionDate || new Date()).getFullYear();
           let durationYears = 1;
           if (course && course.duration) {
             const match = course.duration.match(/(\d+)/);
@@ -104,8 +179,26 @@ const updateUser = async (req, res) => {
         }
       }
     }
-    if (user.role === 'Professor' && req.body.assignedCourses) {
-      user.assignedCourses = req.body.assignedCourses;
+    if (user.role === 'Professor') {
+      if (req.body.assignedCourses) user.assignedCourses = req.body.assignedCourses;
+      // Sync subject assignments
+      if (req.body.selectedSubjects !== undefined) {
+        const courseId = (req.body.assignedCourses || user.assignedCourses)?.[0];
+        if (courseId) {
+          // Remove this professor from all subjects in the course
+          await Subject.updateMany(
+            { course: courseId, professor: user._id },
+            { $unset: { professor: '' } }
+          );
+        }
+        // Assign professor to selected subjects
+        if (req.body.selectedSubjects.length > 0) {
+          await Subject.updateMany(
+            { _id: { $in: req.body.selectedSubjects } },
+            { professor: user._id }
+          );
+        }
+      }
     }
     const updatedUser = await user.save();
     res.json(updatedUser);
@@ -157,6 +250,15 @@ const deleteCourse = async (req, res) => {
 const getSubjects = async (req, res) => {
   try {
     const subjects = await Subject.find().populate('course').populate('professor', 'name email');
+    res.json(subjects);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+const getSubjectsByCourse = async (req, res) => {
+  try {
+    const subjects = await Subject.find({ course: req.params.courseId })
+      .populate('professor', 'name _id');
     res.json(subjects);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -255,7 +357,7 @@ module.exports = {
   getDashboardStats,
   getUsers, createUser, updateUser, deleteUser,
   getCourses, createCourse, updateCourse, deleteCourse,
-  getSubjects, createSubject, updateSubject, deleteSubject,
+  getSubjects, getSubjectsByCourse, createSubject, updateSubject, deleteSubject,
   getNotices, createNotice, deleteNotice,
   getAllLeaves, respondToLeave, deleteLeave
 };

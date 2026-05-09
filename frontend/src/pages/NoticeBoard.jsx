@@ -2,12 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Bell, Trash2, PlusCircle } from 'lucide-react';
+import ConfirmModal from '../components/ConfirmModal';
+import { useToast } from '../context/ToastContext';
 const NoticeBoard = () => {
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ title: '', content: '', audience: 'All' });
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const getApiEndpoint = () => {
     if (user.role === 'Admin') return 'http://localhost:5000/api/admin/notices';
     if (user.role === 'Professor') return 'http://localhost:5000/api/professor/notices';
@@ -35,18 +39,23 @@ const NoticeBoard = () => {
       setFormData({ title: '', content: '', audience: 'All' });
       fetchNotices();
     } catch {
-      alert('Error saving notice');
+      showToast('Error saving notice', 'error');
     }
   };
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (user.role !== 'Admin') return;
-    if (window.confirm('Delete this notice?')) {
-      try {
-        await axios.delete(`http://localhost:5000/api/admin/notices/${id}`);
-        fetchNotices();
-      } catch {
-        alert('Error deleting notice');
-      }
+    setDeleteTarget(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/admin/notices/${deleteTarget}`);
+      fetchNotices();
+    } catch {
+      showToast('Error deleting notice', 'error');
+    } finally {
+      setDeleteTarget(null);
     }
   };
   const formatDate = (dateString) => {
@@ -122,6 +131,16 @@ const NoticeBoard = () => {
           {notices.length === 0 && <p className="text-center" style={{ gridColumn: '1 / -1' }}>No notices available.</p>}
         </div>
       )}
+
+      <ConfirmModal 
+        isOpen={!!deleteTarget}
+        title="Delete Notice"
+        message="Are you sure you want to delete this notice? This action cannot be undone."
+        confirmText="Delete Notice"
+        isDanger={true}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 };

@@ -22,7 +22,13 @@ const courseSubjectsMap = {
   'BCA': ['C Programming', 'Data Structures', 'Database Management Systems', 'Web Development', 'Computer Networks'],
   'MCA': ['Advanced Java', 'Machine Learning', 'Artificial Intelligence', 'Cloud Computing', 'Data Science'],
   'BBA': ['Principles of Management', 'Financial Accounting', 'Marketing Management', 'Human Resource Management', 'Business Economics'],
-  'MBA': ['Strategic Management', 'Corporate Finance', 'International Business', 'Operations Management', 'Organizational Behavior']
+  'MBA': ['Strategic Management', 'Corporate Finance', 'International Business', 'Operations Management', 'Organizational Behavior'],
+  'B.Tech': ['Mechanics', 'Engineering Drawing', 'C Programming', 'Mathematics I', 'Physics'],
+  'M.Tech': ['Advanced Algorithms', 'Distributed Systems', 'Cryptography', 'Machine Learning', 'Data Analytics'],
+  'B.Sc': ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'Computer Science'],
+  'M.Sc': ['Advanced Physics', 'Organic Chemistry', 'Advanced Calculus', 'Botany', 'Zoology'],
+  'B.Com': ['Financial Accounting', 'Business Law', 'Economics', 'Cost Accounting', 'Taxation'],
+  'M.Com': ['Corporate Tax Planning', 'Advanced Economics', 'Strategic Management', 'Advanced Accounting', 'Business Environment']
 };
 const getRandomName = () => Names[Math.floor(Math.random() * Names.length)];
 const getRandomSurname = () => Surnames[Math.floor(Math.random() * Surnames.length)];
@@ -39,7 +45,13 @@ const seedData = async () => {
       { name: 'BCA', duration: '3', count: 7, desc: 'Bachelor of Computer Applications' },
       { name: 'MCA', duration: '2', count: 8, desc: 'Master of Computer Applications' },
       { name: 'BBA', duration: '3', count: 8, desc: 'Bachelor of Business Administrations' },
-      { name: 'MBA', duration: '2', count: 10, desc: 'Master of Business Administrations' }
+      { name: 'MBA', duration: '2', count: 10, desc: 'Master of Business Administrations' },
+      { name: 'B.Tech', duration: '4', count: 12, desc: 'Bachelor of Technology' },
+      { name: 'M.Tech', duration: '2', count: 8, desc: 'Master of Technology' },
+      { name: 'B.Sc', duration: '3', count: 10, desc: 'Bachelor of Science' },
+      { name: 'M.Sc', duration: '2', count: 6, desc: 'Master of Science' },
+      { name: 'B.Com', duration: '3', count: 15, desc: 'Bachelor of Commerce' },
+      { name: 'M.Com', duration: '2', count: 10, desc: 'Master of Commerce' }
     ];
     for (const data of coursesData) {
       let course = await Course.findOne({ name: data.name });
@@ -50,7 +62,8 @@ const seedData = async () => {
       }
       for (let i = 0; i < data.count; i++) {
         const studentName = getFullName();
-        const studentEmail = `${studentName.toLowerCase()}${Math.floor(Math.random() * 10000)}@student.com`;
+        const randomDigits = Math.floor(Math.random() * 9900) + 100; // 3 to 4 digits
+        const studentEmail = `${studentName.replace(/\s+/g, '').toLowerCase()}${randomDigits}@gmail.com`;
         const student = new User({
           name: studentName,
           email: studentEmail,
