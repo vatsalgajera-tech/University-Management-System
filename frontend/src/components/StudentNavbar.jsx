@@ -2,8 +2,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import DDULogo from '../assets/DDU-logo.jpg';
 import { LayoutDashboard, UserCheck, Bell, BookOpen, Calendar, LogOut, FileText, ClipboardList } from 'lucide-react';
-import DDULogo from '../assets/DDU-Logo.jpg';
 const StudentNavbar = ({ routes }) => {
   const { user, logout } = useContext(AuthContext);
   const [noticesCount, setNoticesCount] = useState(0);
