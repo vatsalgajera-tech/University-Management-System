@@ -21,7 +21,7 @@ const StudentMaterials = () => {
     <div>
       <h2 style={{ marginBottom: '2rem' }}>My Study Materials</h2>
       {loading ? <p>Loading...</p> : (
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
           {materials.map(mat => (
             <div key={mat._id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
               <h4 style={{ margin: 0, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>

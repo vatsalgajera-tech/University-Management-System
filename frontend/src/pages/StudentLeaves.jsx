@@ -47,11 +47,13 @@ const StudentLeaves = () => {
   };
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>My Leave Requests</h2>
-        <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-          <Send size={18} style={{ marginRight: '0.5rem' }} /> Apply for Leave
-        </button>
+        <div className="page-header-actions">
+          <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+            <Send size={18} style={{ marginRight: '0.5rem' }} /> Apply for Leave
+          </button>
+        </div>
       </div>
       {showForm && (
         <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>

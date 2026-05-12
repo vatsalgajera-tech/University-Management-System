@@ -7,6 +7,7 @@ import StudentAttendance from '../pages/StudentAttendance';
 import StudentMaterials from '../pages/StudentMaterials';
 import StudentLeaves from '../pages/StudentLeaves';
 import NoticeBoard from '../pages/NoticeBoard';
+
 const StudentLayout = () => {
   const routes = [
     { path: '/student/dashboard', name: 'Dashboard' },
@@ -16,10 +17,11 @@ const StudentLayout = () => {
     { path: '/student/leaves', name: 'Leaves' },
     { path: '/student/notices', name: 'Notice Board' },
   ];
+
   return (
-    <div style={{ height: '100vh', overflow: 'hidden', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', display: 'flex', flexDirection: 'column' }}>
       <StudentNavbar routes={routes} />
-      <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 2rem' }}>
         <Routes>
           <Route path="/" element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<StudentDashboard />} />
@@ -34,4 +36,6 @@ const StudentLayout = () => {
     </div>
   );
 };
+
 export default StudentLayout;
+

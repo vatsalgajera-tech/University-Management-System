@@ -68,7 +68,7 @@ const ManageLeaves = () => {
   };
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>Leave Requests</h2>
       </div>
       <div className="glass-panel" style={{ overflowX: 'auto' }}>

@@ -73,10 +73,10 @@ const StudentProfile = () => {
   return (
     <div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', alignItems: 'start' }}>
 
         {/* ── LEFT: Avatar + quick info ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'sticky', top: '0', alignSelf: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
           {/* Avatar card */}
           <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>
@@ -137,7 +137,7 @@ const StudentProfile = () => {
           {/* Personal Information */}
           <div className="glass-panel" style={{ padding: '2rem' }}>
             <h3 style={{ marginBottom: '1.25rem', fontSize: '1rem', color: 'var(--text-secondary)' }}>Personal Information</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0 2rem' }}>
               <Field icon={<User size={15} />} label="Full Name" value={profile.name} />
               <Field icon={<Mail size={15} />} label="Email" value={profile.email} />
               <Field icon={<Phone size={15} />} label="Mobile" value={profile.mobileNumber} />
@@ -152,7 +152,7 @@ const StudentProfile = () => {
           {/* Parent Info */}
           <div className="glass-panel" style={{ padding: '2rem' }}>
             <h3 style={{ marginBottom: '1.25rem', fontSize: '1rem', color: 'var(--text-secondary)' }}>Parent / Guardian</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0 2rem' }}>
               <Field icon={<Heart size={15} />} label="Parent Name" value={profile.parentName} />
               <Field icon={<Phone size={15} />} label="Parent Contact" value={profile.parentContact} />
             </div>
@@ -171,7 +171,7 @@ const StudentProfile = () => {
               }}>{message.text}</div>
             )}
 
-            <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                 <label className="form-label"><Mail size={14} style={{ marginRight: '0.4rem', verticalAlign: 'middle' }} />Email Address</label>
                 <input type="email" className="form-input" value={email} onChange={e => setEmail(e.target.value)} required />

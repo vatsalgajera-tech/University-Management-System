@@ -76,20 +76,20 @@ const AdminSubjects = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="page-header">
         <h2>Manage Subjects</h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="page-header-actions">
           <input
             type="text"
             placeholder="Search subjects..."
             className="form-input"
-            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }}
+            style={{ minWidth: '180px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <select
             className="form-input"
-            style={{ width: '180px', marginBottom: 0, padding: '0.5rem' }}
+            style={{ minWidth: '140px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
             value={filterCourse}
             onChange={(e) => setFilterCourse(e.target.value)}
           >
@@ -104,7 +104,7 @@ const AdminSubjects = () => {
       {showForm && (
         <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
           <h3>{editingId ? 'Edit' : 'Add'} Subject</h3>
-          <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
             <div className="form-group" style={{ gridColumn: 'span 2' }}>
               <label className="form-label">Subject Name</label>
               <input type="text" className="form-input" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />

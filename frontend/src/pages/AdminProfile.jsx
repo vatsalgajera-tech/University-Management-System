@@ -15,13 +15,13 @@ const AdminProfile = () => {
       const payload = { email };
       if (password) payload.password = password;
 
-      const res = await axios.put(`http://localhost:5000/api/admin/users/${user._id}`, payload);
-      
+      const res = await axios.put(`${import.meta.env.VITE_API_URLs}/api/admin/users/${user._id}`, payload);
+
       setMessage({ text: 'Profile updated successfully! Refreshing...', type: 'success' });
-      
+
       const updatedUser = { ...user, email: res.data.email };
       localStorage.setItem('user', JSON.stringify(updatedUser));
-      
+
       setTimeout(() => {
         window.location.reload();
       }, 1500);
@@ -33,11 +33,11 @@ const AdminProfile = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>Update Profile</h2>
       </div>
 
-      <div className="glass-panel" style={{ maxWidth: '500px', padding: '2rem' }}>
+      <div className="glass-panel" style={{ maxWidth: '500px', width: '100%', padding: '2rem' }}>
         {message.text && (
           <div style={{ padding: '1rem', marginBottom: '1rem', borderRadius: 'var(--radius-md)', background: message.type === 'success' ? 'rgba(46, 213, 115, 0.2)' : 'rgba(255, 71, 87, 0.2)', color: message.type === 'success' ? 'var(--success)' : 'var(--danger)' }}>
             {message.text}
@@ -46,21 +46,21 @@ const AdminProfile = () => {
         <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div className="form-group">
             <label className="form-label">Admin Email (Gmail)</label>
-            <input 
-              type="email" 
-              className="form-input" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
+            <input
+              type="email"
+              className="form-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="form-group">
             <label className="form-label">New Password (leave blank to keep unchanged)</label>
-            <input 
-              type="password" 
-              className="form-input" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+            <input
+              type="password"
+              className="form-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button type="submit" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>

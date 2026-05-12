@@ -41,7 +41,7 @@ const ProfProfile = () => {
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', alignItems: 'stretch' }}>
 
         {/* Info Card */}
         <div className="glass-panel" style={{ padding: '2rem', height: '100%', boxSizing: 'border-box' }}>

@@ -171,21 +171,21 @@ const AdminUsers = ({ userRole }) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="page-header">
         <h2>Manage {userRole}s</h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="page-header-actions">
           <input
             type="text"
             placeholder={`Search ${userRole.toLowerCase()}s...`}
             className="form-input"
-            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }}
+            style={{ minWidth: '180px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           {(userRole === 'Student' || userRole === 'Professor') && (
             <select
               className="form-input"
-              style={{ width: '180px', marginBottom: 0, padding: '0.5rem' }}
+              style={{ minWidth: '140px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
               value={filterCourse}
               onChange={(e) => setFilterCourse(e.target.value)}
             >
@@ -211,7 +211,7 @@ const AdminUsers = ({ userRole }) => {
       {showForm && (
         <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
           <h3>{editingId ? 'Edit' : 'Add'} {userRole}</h3>
-          <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
             <div className="form-group">
               <label className="form-label">Name</label>
               <input type="text" className="form-input" placeholder="Enter Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
@@ -324,10 +324,8 @@ const AdminUsers = ({ userRole }) => {
                 {formData.assignedCourses.length > 0 && (
                   <div className="form-group" style={{ gridColumn: 'span 2' }}>
                     <label className="form-label" style={{ marginBottom: '0.75rem' }}>
-                      Step 2 — Select Subjects
-                      <span style={{ color: 'var(--text-muted)', fontWeight: 400, marginLeft: '0.5rem', fontSize: '0.8rem' }}>
-                        (only unassigned or your subjects shown)
-                      </span>
+                      Select Subject
+
                     </label>
                     {loadingSubjects ? (
                       <p style={{ color: 'var(--text-muted)', padding: '0.5rem' }}>Loading subjects...</p>

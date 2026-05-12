@@ -65,12 +65,14 @@ const NoticeBoard = () => {
   };
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>Notice Board</h2>
         {user.role === 'Admin' && (
-          <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
-            <PlusCircle size={18} style={{ marginRight: '0.5rem' }} /> Add Notice
-          </button>
+          <div className="page-header-actions">
+            <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
+              <PlusCircle size={18} style={{ marginRight: '0.5rem' }} /> Add Notice
+            </button>
+          </div>
         )}
       </div>
       {showForm && user.role === 'Admin' && (
@@ -100,7 +102,7 @@ const NoticeBoard = () => {
         </div>
       )}
       {loading ? <p>Loading notices...</p> : (
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
           {notices.map(notice => (
             <div key={notice._id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
               <div className="flex justify-between items-start mb-2">

@@ -56,11 +56,11 @@ const ProfAttendance = () => {
   const currStudents = students.filter(s => s.enrolledCourse?._id === selectedCourse);
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>Mark Attendance</h2>
       </div>
       <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
-        <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
           <div className="form-group mb-0">
             <label className="form-label">Course</label>
             <select className="form-input" value={selectedCourse} onChange={e => setSelectedCourse(e.target.value)}>

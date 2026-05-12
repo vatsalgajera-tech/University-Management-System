@@ -64,12 +64,12 @@ const ProfMaterials = () => {
   };
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>Study Materials</h2>
       </div>
       <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
         <h3>Upload New Material</h3>
-        <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <form onSubmit={handleSubmit} className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
           <div className="form-group">
             <label className="form-label">Material Title</label>
             <input type="text" className="form-input" value={title} onChange={e => setTitle(e.target.value)} required />

@@ -71,20 +71,20 @@ const AdminCourses = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="page-header">
         <h2>Manage Courses</h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div className="page-header-actions">
           <input
             type="text"
             placeholder="Search courses..."
             className="form-input"
-            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }}
+            style={{ minWidth: '180px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <select
             className="form-input"
-            style={{ width: '180px', marginBottom: 0, padding: '0.5rem' }}
+            style={{ minWidth: '140px', flex: 1, marginBottom: 0, padding: '0.5rem' }}
             value={filterDuration}
             onChange={(e) => setFilterDuration(e.target.value)}
           >
@@ -101,7 +101,7 @@ const AdminCourses = () => {
       {showCourseForm && (
         <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
           <h3>{editingCourseId ? 'Edit' : 'Add'} Course</h3>
-          <form onSubmit={handleCourseSubmit} className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <form onSubmit={handleCourseSubmit} className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
             <div className="form-group">
               <label className="form-label">Course Name</label>
               <input type="text" className="form-input" placeholder="Enter Course Name" value={courseFormData.name} onChange={(e) => setCourseFormData({ ...courseFormData, name: e.target.value })} required />

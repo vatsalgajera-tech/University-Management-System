@@ -47,7 +47,7 @@ const ProfStudents = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="page-header">
         <h2>My Students</h2>
         <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           {filtered.length} of {students.length} student{students.length !== 1 ? 's' : ''}
