@@ -30,7 +30,7 @@ const StudentMaterials = () => {
               </h4>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Course: {mat.course?.name}</p>
               <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
-              <a href={`${import.meta.env.VITE_API_URL}/${mat.fileUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary flex justify-center mt-4">
+              <a href={`${import.meta.env.VITE_API_URL}${mat.fileUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary flex justify-center mt-4">
                 <Download size={18} style={{ marginRight: '0.5rem' }} /> Download File
               </a>
             </div>
