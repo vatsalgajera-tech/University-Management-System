@@ -22,7 +22,7 @@ const ProfProfile = () => {
       const payload = { email };
       if (password) payload.password = password;
 
-      const res = await axios.put('http://localhost:5000/api/professor/profile', payload);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/professor/profile`, payload);
 
       // Update localStorage
       const updatedUser = { ...user, email: res.data.email };

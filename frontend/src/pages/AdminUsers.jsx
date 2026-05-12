@@ -33,7 +33,7 @@ const AdminUsers = ({ userRole }) => {
   }, [userRole]);
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/admin/users?role=${userRole}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/users?role=${userRole}`);
       setUsers(res.data);
     } catch (err) {
       console.error(err);
@@ -43,7 +43,7 @@ const AdminUsers = ({ userRole }) => {
   };
   const fetchAllSubjects = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/subjects');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/subjects`);
       setAllSubjects(res.data);
     } catch (err) {
       console.error(err);
@@ -51,7 +51,7 @@ const AdminUsers = ({ userRole }) => {
   };
   const fetchCourses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/courses');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/courses`);
       setCourses(res.data);
     } catch (err) {
       console.error(err);
@@ -61,7 +61,7 @@ const AdminUsers = ({ userRole }) => {
     if (!courseId) { setSubjects([]); return; }
     setLoadingSubjects(true);
     try {
-      const res = await axios.get(`http://localhost:5000/api/admin/subjects/by-course/${courseId}`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/subjects/by-course/${courseId}`);
       setSubjects(res.data);
     } catch (err) {
       console.error(err);
@@ -81,9 +81,9 @@ const AdminUsers = ({ userRole }) => {
         payload.address = { city: formData.city, state: formData.state, pincode: formData.pincode };
       }
       if (editingId) {
-        await axios.put(`http://localhost:5000/api/admin/users/${editingId}`, payload);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/admin/users/${editingId}`, payload);
       } else {
-        await axios.post('http://localhost:5000/api/admin/users', payload);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/users`, payload);
       }
       setShowForm(false);
       setEditingId(null);
@@ -106,7 +106,7 @@ const AdminUsers = ({ userRole }) => {
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/users/${deleteTarget}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/users/${deleteTarget}`);
       fetchUsers();
     } catch {
       showToast('Error deleting user', 'error');
@@ -141,7 +141,7 @@ const AdminUsers = ({ userRole }) => {
     if (courseId) {
       setLoadingSubjects(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/admin/subjects/by-course/${courseId}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/subjects/by-course/${courseId}`);
         setSubjects(res.data);
         const owned = res.data
           .filter(s => s.professor?._id?.toString() === user._id?.toString())

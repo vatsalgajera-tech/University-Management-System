@@ -29,7 +29,7 @@ const StudentProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/auth/profile');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/profile`);
         setProfile(res.data);
         setEmail(res.data.email || '');
       } catch (err) {
@@ -51,7 +51,7 @@ const StudentProfile = () => {
     try {
       const payload = { email };
       if (password) payload.password = password;
-      const res = await axios.put('http://localhost:5000/api/student/profile', payload);
+      const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/student/profile`, payload);
       const stored = JSON.parse(localStorage.getItem('user') || '{}');
       localStorage.setItem('user', JSON.stringify({ ...stored, email: res.data.email }));
       setMessage({ text: 'Profile updated successfully!', type: 'success' });
@@ -65,10 +65,10 @@ const StudentProfile = () => {
   };
 
   if (loading) return <div>Loading profile...</div>;
-  if (!profile)  return <div>Could not load profile.</div>;
+  if (!profile) return <div>Could not load profile.</div>;
 
-  const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' }) : '—';
-  const initials   = profile.name?.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+  const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : '—';
+  const initials = profile.name?.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 
   return (
     <div>
@@ -118,8 +118,8 @@ const StudentProfile = () => {
             <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>Status</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
               {[
-                { label: 'Category',    value: profile.category   || 'N/A' },
-                { label: 'Gender',      value: profile.gender     || 'N/A' },
+                { label: 'Category', value: profile.category || 'N/A' },
+                { label: 'Gender', value: profile.gender || 'N/A' },
                 { label: 'Handicapped', value: profile.isHandicapped ? 'Yes' : 'No' },
               ].map((s, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
@@ -138,14 +138,14 @@ const StudentProfile = () => {
           <div className="glass-panel" style={{ padding: '2rem' }}>
             <h3 style={{ marginBottom: '1.25rem', fontSize: '1rem', color: 'var(--text-secondary)' }}>Personal Information</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
-              <Field icon={<User size={15}/>}     label="Full Name"       value={profile.name} />
-              <Field icon={<Mail size={15}/>}     label="Email"           value={profile.email} />
-              <Field icon={<Phone size={15}/>}    label="Mobile"          value={profile.mobileNumber} />
-              <Field icon={<Calendar size={15}/>} label="Date of Birth"   value={formatDate(profile.dateOfBirth)} />
-              <Field icon={<BookOpen size={15}/>} label="Enrolled Course" value={profile.enrolledCourse?.name} />
-              <Field icon={<Shield size={15}/>}   label="Category"        value={profile.category} />
-              <Field icon={<MapPin size={15}/>}   label="City"            value={profile.address?.city} />
-              <Field icon={<MapPin size={15}/>}   label="State / Pincode" value={profile.address ? `${profile.address.state} – ${profile.address.pincode}` : '—'} />
+              <Field icon={<User size={15} />} label="Full Name" value={profile.name} />
+              <Field icon={<Mail size={15} />} label="Email" value={profile.email} />
+              <Field icon={<Phone size={15} />} label="Mobile" value={profile.mobileNumber} />
+              <Field icon={<Calendar size={15} />} label="Date of Birth" value={formatDate(profile.dateOfBirth)} />
+              <Field icon={<BookOpen size={15} />} label="Enrolled Course" value={profile.enrolledCourse?.name} />
+              <Field icon={<Shield size={15} />} label="Category" value={profile.category} />
+              <Field icon={<MapPin size={15} />} label="City" value={profile.address?.city} />
+              <Field icon={<MapPin size={15} />} label="State / Pincode" value={profile.address ? `${profile.address.state} – ${profile.address.pincode}` : '—'} />
             </div>
           </div>
 
@@ -153,8 +153,8 @@ const StudentProfile = () => {
           <div className="glass-panel" style={{ padding: '2rem' }}>
             <h3 style={{ marginBottom: '1.25rem', fontSize: '1rem', color: 'var(--text-secondary)' }}>Parent / Guardian</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
-              <Field icon={<Heart size={15}/>} label="Parent Name"    value={profile.parentName} />
-              <Field icon={<Phone size={15}/>} label="Parent Contact" value={profile.parentContact} />
+              <Field icon={<Heart size={15} />} label="Parent Name" value={profile.parentName} />
+              <Field icon={<Phone size={15} />} label="Parent Contact" value={profile.parentContact} />
             </div>
           </div>
 
@@ -173,20 +173,20 @@ const StudentProfile = () => {
 
             <form onSubmit={handleSave} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label"><Mail size={14} style={{ marginRight:'0.4rem', verticalAlign:'middle' }}/>Email Address</label>
+                <label className="form-label"><Mail size={14} style={{ marginRight: '0.4rem', verticalAlign: 'middle' }} />Email Address</label>
                 <input type="email" className="form-input" value={email} onChange={e => setEmail(e.target.value)} required />
               </div>
               <div className="form-group">
-                <label className="form-label"><Lock size={14} style={{ marginRight:'0.4rem', verticalAlign:'middle' }}/>New Password</label>
+                <label className="form-label"><Lock size={14} style={{ marginRight: '0.4rem', verticalAlign: 'middle' }} />New Password</label>
                 <input type="password" className="form-input" value={password} placeholder="Leave blank to keep" onChange={e => setPassword(e.target.value)} />
               </div>
               <div className="form-group">
-                <label className="form-label"><Lock size={14} style={{ marginRight:'0.4rem', verticalAlign:'middle' }}/>Confirm Password</label>
+                <label className="form-label"><Lock size={14} style={{ marginRight: '0.4rem', verticalAlign: 'middle' }} />Confirm Password</label>
                 <input type="password" className="form-input" value={confirmPwd} placeholder="Re-enter new password" onChange={e => setConfirmPwd(e.target.value)} />
               </div>
               <div style={{ gridColumn: '1 / -1' }}>
                 <button type="submit" className="btn btn-primary" disabled={saving}
-                  style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <UserCheck size={17} />
                   {saving ? 'Saving...' : 'Save Changes'}
                 </button>

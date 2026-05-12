@@ -13,7 +13,7 @@ const StudentLeaves = () => {
   }, []);
   const fetchLeaves = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/student/leaves');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/student/leaves`);
       setLeaves(res.data);
     } catch (err) {
       console.error(err);
@@ -24,7 +24,7 @@ const StudentLeaves = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/student/leaves', formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/student/leaves`, formData);
       setShowForm(false);
       setFormData({ date: '', reason: '' });
       fetchLeaves();
@@ -59,11 +59,11 @@ const StudentLeaves = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label className="form-label">Date</label>
-              <input type="date" className="form-input" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} min={new Date().toISOString().split('T')[0]} required />
+              <input type="date" className="form-input" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} min={new Date().toISOString().split('T')[0]} required />
             </div>
             <div className="form-group">
               <label className="form-label">Reason for leave</label>
-              <textarea className="form-input" rows="3" value={formData.reason} onChange={(e) => setFormData({...formData, reason: e.target.value})} required></textarea>
+              <textarea className="form-input" rows="3" value={formData.reason} onChange={(e) => setFormData({ ...formData, reason: e.target.value })} required></textarea>
             </div>
             <button type="submit" className="btn btn-primary" style={{ marginRight: '1rem' }}>Submit Request</button>
             <button type="button" className="btn btn-secondary" onClick={() => setShowForm(false)}>Cancel</button>
@@ -82,14 +82,14 @@ const StudentLeaves = () => {
           </thead>
           <tbody>
             {loading ? <tr><td colSpan="4" className="text-center">Loading...</td></tr> :
-             leaves.map(leave => (
-              <tr key={leave._id}>
-                <td>{formatDate(leave.date)}</td>
-                <td>{leave.reason}</td>
-                <td>{getStatusBadge(leave.status)}</td>
-                <td>{formatDate(leave.createdAt)}</td>
-              </tr>
-            ))}
+              leaves.map(leave => (
+                <tr key={leave._id}>
+                  <td>{formatDate(leave.date)}</td>
+                  <td>{leave.reason}</td>
+                  <td>{getStatusBadge(leave.status)}</td>
+                  <td>{formatDate(leave.createdAt)}</td>
+                </tr>
+              ))}
             {leaves.length === 0 && !loading && <tr><td colSpan="4" className="text-center">No leave requests found.</td></tr>}
           </tbody>
         </table>

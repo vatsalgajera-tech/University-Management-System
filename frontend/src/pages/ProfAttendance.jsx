@@ -10,8 +10,8 @@ const ProfAttendance = () => {
   const fetchInitialData = async () => {
     try {
       const [crRes, stRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/professor/courses'),
-        axios.get('http://localhost:5000/api/professor/students')
+        axios.get(`${import.meta.env.VITE_API_URL}/api/professor/courses`),
+        axios.get(`${import.meta.env.VITE_API_URL}/api/professor/students`)
       ]);
       setCourses(crRes.data);
       setStudents(stRes.data);
@@ -47,7 +47,7 @@ const ProfAttendance = () => {
       status: attendance[studentId]
     }));
     try {
-      await axios.post('http://localhost:5000/api/professor/attendance', { records });
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/professor/attendance`, { records });
       alert('Attendance saved successfully');
     } catch {
       alert('Error saving attendance');

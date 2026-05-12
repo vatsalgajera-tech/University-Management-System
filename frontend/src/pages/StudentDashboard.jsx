@@ -4,7 +4,7 @@ import { BookOpen, Bell, Calendar, FileText } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const ATTENDANCE_COLORS = ['#10b981', '#f43f5e'];   // Present=green, Absent=red
-const LEAVE_COLORS      = { Pending: '#eab308', Approved: '#10b981', Rejected: '#f43f5e' };
+const LEAVE_COLORS = { Pending: '#eab308', Approved: '#10b981', Rejected: '#f43f5e' };
 
 const tooltipStyle = {
   contentStyle: {
@@ -37,7 +37,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/student/dashboard');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/student/dashboard`);
         setStats(res.data);
       } catch (err) {
         console.error(err);
@@ -51,11 +51,13 @@ const StudentDashboard = () => {
   if (loading) return <div>Loading dashboard...</div>;
 
   const statCards = [
-    { title: 'My Attendance',   value: `${stats.attendancePercentage}%`, icon: <Calendar size={24} color="var(--accent-primary)" />, bg: 'rgba(59,130,246,0.1)' },
-    { title: 'Notices',         value: stats.noticesCount,               icon: <Bell     size={24} color="var(--warning)" />,        bg: 'rgba(245,158,11,0.1)' },
-    { title: 'Study Materials', value: stats.studyMaterialsCount,        icon: <BookOpen size={24} color="var(--success)" />,        bg: 'rgba(16,185,129,0.1)' },
-    { title: 'Total Leaves',    value: stats.leaveData.reduce((a, b) => a + b.value, 0),
-      icon: <FileText size={24} color="var(--danger)" />, bg: 'rgba(239,68,68,0.1)' },
+    { title: 'My Attendance', value: `${stats.attendancePercentage}%`, icon: <Calendar size={24} color="var(--accent-primary)" />, bg: 'rgba(59,130,246,0.1)' },
+    { title: 'Notices', value: stats.noticesCount, icon: <Bell size={24} color="var(--warning)" />, bg: 'rgba(245,158,11,0.1)' },
+    { title: 'Study Materials', value: stats.studyMaterialsCount, icon: <BookOpen size={24} color="var(--success)" />, bg: 'rgba(16,185,129,0.1)' },
+    {
+      title: 'Total Leaves', value: stats.leaveData.reduce((a, b) => a + b.value, 0),
+      icon: <FileText size={24} color="var(--danger)" />, bg: 'rgba(239,68,68,0.1)'
+    },
   ];
 
   return (

@@ -37,7 +37,7 @@ const ProfDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/professor/dashboard');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/professor/dashboard`);
         setStats(res.data);
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -51,9 +51,9 @@ const ProfDashboard = () => {
   if (loading) return <div>Loading dashboard...</div>;
 
   const statCards = [
-    { title: 'My Students',    value: stats.studentsCount, icon: <Users    size={24} color="var(--accent-primary)" />, bg: 'rgba(59,130,246,0.1)' },
-    { title: 'Notices',        value: stats.noticesCount,  icon: <Bell     size={24} color="var(--warning)" />,        bg: 'rgba(245,158,11,0.1)' },
-    { title: 'Pending Leaves', value: stats.leavesCount,   icon: <FileText size={24} color="var(--danger)" />,         bg: 'rgba(239,68,68,0.1)'  },
+    { title: 'My Students', value: stats.studentsCount, icon: <Users size={24} color="var(--accent-primary)" />, bg: 'rgba(59,130,246,0.1)' },
+    { title: 'Notices', value: stats.noticesCount, icon: <Bell size={24} color="var(--warning)" />, bg: 'rgba(245,158,11,0.1)' },
+    { title: 'Pending Leaves', value: stats.leavesCount, icon: <FileText size={24} color="var(--danger)" />, bg: 'rgba(239,68,68,0.1)' },
   ];
 
   const tooltipProps = {

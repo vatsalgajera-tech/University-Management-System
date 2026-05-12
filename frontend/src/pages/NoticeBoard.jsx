@@ -13,9 +13,9 @@ const NoticeBoard = () => {
   const [formData, setFormData] = useState({ title: '', content: '', audience: 'All' });
   const [deleteTarget, setDeleteTarget] = useState(null);
   const getApiEndpoint = () => {
-    if (user.role === 'Admin') return 'http://localhost:5000/api/admin/notices';
-    if (user.role === 'Professor') return 'http://localhost:5000/api/professor/notices';
-    return 'http://localhost:5000/api/student/notices';
+    if (user.role === 'Admin') return `${import.meta.env.VITE_API_URL}/api/admin/notices`;
+    if (user.role === 'Professor') return `${import.meta.env.VITE_API_URL}/api/professor/notices`;
+    return `${import.meta.env.VITE_API_URL}/api/student/notices`;
   };
   useEffect(() => {
     fetchNotices();
@@ -34,7 +34,7 @@ const NoticeBoard = () => {
     e.preventDefault();
     if (user.role !== 'Admin') return;
     try {
-      await axios.post('http://localhost:5000/api/admin/notices', formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/notices`, formData);
       setShowForm(false);
       setFormData({ title: '', content: '', audience: 'All' });
       fetchNotices();
@@ -50,7 +50,7 @@ const NoticeBoard = () => {
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/notices/${deleteTarget}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/notices/${deleteTarget}`);
       fetchNotices();
     } catch {
       showToast('Error deleting notice', 'error');
@@ -132,7 +132,7 @@ const NoticeBoard = () => {
         </div>
       )}
 
-      <ConfirmModal 
+      <ConfirmModal
         isOpen={!!deleteTarget}
         title="Delete Notice"
         message="Are you sure you want to delete this notice? This action cannot be undone."

@@ -13,8 +13,8 @@ const ProfMaterials = () => {
   const fetchData = async () => {
     try {
       const [matRes, crsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/professor/studymaterial'),
-        axios.get('http://localhost:5000/api/professor/courses')
+        axios.get(`${import.meta.env.VITE_API_URL}/api/professor/studymaterial`),
+        axios.get(`${import.meta.env.VITE_API_URL}/api/professor/courses`)
       ]);
       setMaterials(matRes.data);
       setCourses(crsRes.data);
@@ -34,7 +34,7 @@ const ProfMaterials = () => {
     formData.append('course', course);
     formData.append('file', file);
     try {
-      await axios.post('http://localhost:5000/api/professor/studymaterial', formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/professor/studymaterial`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setTitle('');
@@ -54,7 +54,7 @@ const ProfMaterials = () => {
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await axios.delete(`http://localhost:5000/api/professor/studymaterial/${deleteTarget}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/professor/studymaterial/${deleteTarget}`);
       fetchData();
     } catch {
       alert('Error deleting');
@@ -111,7 +111,7 @@ const ProfMaterials = () => {
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{mat.course?.name}</p>
             <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
-            <a href={`http://localhost:5000${mat.fileUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <a href={`${import.meta.env.VITE_API_URL}${mat.fileUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ marginTop: '1rem', textAlign: 'center' }}>
               View / Download File
             </a>
           </div>
@@ -119,7 +119,7 @@ const ProfMaterials = () => {
         {materials.length === 0 && <p style={{ gridColumn: '1/-1' }}>No materials uploaded yet.</p>}
       </div>
 
-      <ConfirmModal 
+      <ConfirmModal
         isOpen={!!deleteTarget}
         title="Delete Material"
         message="Are you sure you want to delete this study material? This action cannot be undone."

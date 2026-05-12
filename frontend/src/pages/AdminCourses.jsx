@@ -18,7 +18,7 @@ const AdminCourses = () => {
   }, []);
   const fetchData = async () => {
     try {
-      const coursesRes = await axios.get('http://localhost:5000/api/admin/courses');
+      const coursesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/courses`);
       setCourses(coursesRes.data);
     } catch {
       console.error('Error fetching courses');
@@ -30,9 +30,9 @@ const AdminCourses = () => {
     e.preventDefault();
     try {
       if (editingCourseId) {
-        await axios.put(`http://localhost:5000/api/admin/courses/${editingCourseId}`, courseFormData);
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/admin/courses/${editingCourseId}`, courseFormData);
       } else {
-        await axios.post('http://localhost:5000/api/admin/courses', courseFormData);
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/courses`, courseFormData);
       }
       setShowCourseForm(false);
       setEditingCourseId(null);
@@ -49,7 +49,7 @@ const AdminCourses = () => {
   const confirmDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await axios.delete(`http://localhost:5000/api/admin/courses/${deleteTarget}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/courses/${deleteTarget}`);
       fetchData();
     } catch {
       showToast('Error deleting course', 'error');
@@ -63,8 +63,8 @@ const AdminCourses = () => {
     setShowCourseForm(true);
   };
   const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          (course.description && course.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (course.description && course.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesDuration = filterDuration ? course.duration.toString() === filterDuration : true;
     return matchesSearch && matchesDuration;
   });
@@ -74,16 +74,16 @@ const AdminCourses = () => {
       <div className="flex justify-between items-center mb-4" style={{ flexWrap: 'wrap', gap: '1rem' }}>
         <h2>Manage Courses</h2>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <input 
-            type="text" 
-            placeholder="Search courses..." 
-            className="form-input" 
-            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }} 
-            value={searchTerm} 
-            onChange={(e) => setSearchTerm(e.target.value)} 
+          <input
+            type="text"
+            placeholder="Search courses..."
+            className="form-input"
+            style={{ width: '250px', marginBottom: 0, padding: '0.5rem' }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <select 
-            className="form-input" 
+          <select
+            className="form-input"
             style={{ width: '180px', marginBottom: 0, padding: '0.5rem' }}
             value={filterDuration}
             onChange={(e) => setFilterDuration(e.target.value)}
@@ -149,7 +149,7 @@ const AdminCourses = () => {
         </table>
       </div>
 
-      <ConfirmModal 
+      <ConfirmModal
         isOpen={!!deleteTarget}
         title="Delete Course"
         message="Warning: This may affect related subjects and students. Proceed?"

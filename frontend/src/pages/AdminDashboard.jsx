@@ -33,15 +33,15 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 };
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({ 
-    totalStudents: 0, totalProfessors: 0, totalCourses: 0, 
-    studentDistribution: [], subjectsPerCourse: [], leaveStatus: [] 
+  const [stats, setStats] = useState({
+    totalStudents: 0, totalProfessors: 0, totalCourses: 0,
+    studentDistribution: [], subjectsPerCourse: [], leaveStatus: []
   });
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/admin/dashboard');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`);
         setStats(res.data);
       } catch (err) {
         console.error(err);
@@ -75,9 +75,9 @@ const AdminDashboard = () => {
       </div>
 
       <h2 style={{ marginBottom: '1.5rem', marginTop: '1rem' }}>Analytics Overview</h2>
-      
+
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-        
+
         {/* Student Distribution */}
         <div className="glass-panel" style={{ padding: '2rem 1rem', height: '400px', display: 'flex', flexDirection: 'column' }}>
           <h3 style={{ marginBottom: '1rem', textAlign: 'center', fontSize: '1.1rem', color: 'var(--text-secondary)' }}>Student Distribution by Course</h3>
@@ -100,9 +100,9 @@ const AdminDashboard = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="transparent" />
                     ))}
                   </Pie>
-                  <Tooltip 
-                    formatter={(value) => [value, 'Students']} 
-                    contentStyle={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }} 
+                  <Tooltip
+                    formatter={(value) => [value, 'Students']}
+                    contentStyle={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }}
                     itemStyle={{ color: 'var(--text-primary)', fontWeight: 500 }}
                   />
                   <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px' }} />
@@ -124,20 +124,20 @@ const AdminDashboard = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.subjectsPerCourse} margin={{ top: 20, right: 10, left: -20, bottom: 40 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    tick={{ fill: 'var(--text-muted)', fontSize: 11 }} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    interval={0} 
-                    angle={-45} 
-                    textAnchor="end" 
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
+                    axisLine={false}
+                    tickLine={false}
+                    interval={0}
+                    angle={-45}
+                    textAnchor="end"
                   />
                   <YAxis allowDecimals={false} tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip 
+                  <Tooltip
                     cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
-                    formatter={(value) => [value, 'Subjects']} 
-                    contentStyle={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }} 
+                    formatter={(value) => [value, 'Subjects']}
+                    contentStyle={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }}
                     itemStyle={{ color: 'var(--text-primary)', fontWeight: 500 }}
                   />
                   <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={40}>
@@ -180,9 +180,9 @@ const AdminDashboard = () => {
                       return <Cell key={`cell-${index}`} fill={color} stroke="transparent" />;
                     })}
                   </Pie>
-                  <Tooltip 
-                    formatter={(value) => [value, 'Requests']} 
-                    contentStyle={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }} 
+                  <Tooltip
+                    formatter={(value) => [value, 'Requests']}
+                    contentStyle={{ background: 'var(--bg-card)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-md)' }}
                     itemStyle={{ color: 'var(--text-primary)', fontWeight: 500 }}
                   />
                   <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px' }} />

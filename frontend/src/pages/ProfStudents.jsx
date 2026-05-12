@@ -11,7 +11,7 @@ const ProfStudents = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/professor/students');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/professor/students`);
         setStudents(res.data);
       } catch (err) {
         console.error(err);

@@ -7,7 +7,7 @@ const StudentAttendance = () => {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/student/attendance');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/student/attendance`);
         setAttendance(res.data);
       } catch (err) {
         console.error(err);
@@ -31,7 +31,7 @@ const StudentAttendance = () => {
     { title: 'Absent', value: absentDays, icon: <UserX size={24} color="var(--danger)" />, bg: 'rgba(239, 68, 68, 0.1)' },
   ];
   if (loading) {
-     return <div>Loading attendance...</div>;
+    return <div>Loading attendance...</div>;
   }
   return (
     <div>

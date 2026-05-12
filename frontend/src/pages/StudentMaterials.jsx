@@ -7,7 +7,7 @@ const StudentMaterials = () => {
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/student/studymaterial');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/student/studymaterial`);
         setMaterials(res.data);
       } catch (err) {
         console.error(err);
@@ -30,7 +30,7 @@ const StudentMaterials = () => {
               </h4>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Course: {mat.course?.name}</p>
               <p style={{ marginTop: '0.5rem', flex: 1 }}>{mat.description}</p>
-              <a href={`http://localhost:5000${mat.fileUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary flex justify-center mt-4">
+              <a href={`${import.meta.env.VITE_API_URL}/${mat.fileUrl}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary flex justify-center mt-4">
                 <Download size={18} style={{ marginRight: '0.5rem' }} /> Download File
               </a>
             </div>

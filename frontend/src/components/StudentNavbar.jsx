@@ -10,7 +10,7 @@ const StudentNavbar = ({ routes }) => {
   useEffect(() => {
     const fetchNoticesCount = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/student/dashboard');
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/student/dashboard`);
         setNoticesCount(res.data.noticesCount || 0);
       } catch (e) {
         console.error("Failed to fetch notices count", e);
