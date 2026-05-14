@@ -5,6 +5,7 @@
   <img src="https://img.shields.io/badge/Express.js-4.x-000000?style=for-the-badge&logo=express&logoColor=white" />
   <img src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
   <img src="https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
   <img src="https://img.shields.io/badge/JWT-Authentication-orange?style=for-the-badge" />
 </p>
@@ -17,47 +18,49 @@
 
 ## 📌 Overview
 
-The **University Management System** is a comprehensive web application that digitizes university operations. It provides dedicated dashboards for administrators, professors, and students to manage academic workflows efficiently.
+The **University Management System** is a role-based web application designed to streamline university operations. It provides separate dashboards for **Admin**, **Professor**, and **Student** users.
 
 This project demonstrates practical experience with:
-- Full-stack MERN development
-- Role-based authentication and authorization
-- RESTful API design
-- State management with Redux Toolkit
-- Responsive UI with Tailwind CSS
-- Secure JWT authentication
+
+- MERN Stack Development
+- JWT Authentication & Authorization
+- RESTful API Development
+- File Upload Handling
+- Role-Based Access Control
+- Responsive UI Design
+- Deployment with Vercel and Render
 
 ---
 
 ## ✨ Features
 
 ### 👨‍💼 Admin Module
-- Admin Authentication
-- Manage Students, Professors, and Courses
+- Secure Admin Login
+- Manage Students and Professors
+- Add, Update, and Delete Courses
 - Assign Professors to Courses
-- Monitor System Activity
-- View Dashboard Analytics
+- Monitor Academic Data
 
 ### 👨‍🏫 Professor Module
-- Professor Login
+- Professor Authentication
 - View Assigned Courses
-- Upload Study Materials
-- Manage Attendance
-- Enter Student Marks
+- Upload Notes and Study Materials
+- Manage Student Attendance
+- Enter Marks and Results
 
 ### 👨‍🎓 Student Module
 - Student Registration and Login
 - View Enrolled Courses
-- Check Attendance
+- Check Attendance Records
 - View Marks and Results
-- Download Study Materials
+- Download Uploaded Materials
 
 ---
 
 ## 🛠️ Tech Stack
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,tailwind,redux,git,github,vscode" />
+  <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,vite,tailwind,git,github,vscode" />
 </p>
 
 ---
@@ -66,27 +69,32 @@ This project demonstrates practical experience with:
 
 ```text
 University-Management-System/
-├── client/
+├── frontend/
+│   ├── public/
 │   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── redux/
-│   │   ├── utils/
-│   │   └── App.jsx
-│   └── package.json
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vercel.json
+│   └── vite.config.js
 │
-├── server/
-│   ├── config/
+├── backend/
 │   ├── controllers/
 │   ├── middleware/
 │   ├── models/
 │   ├── routes/
-│   ├── utils/
+│   ├── scripts/
+│   ├── uploads/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── seed.js
+│   ├── seedData.js
 │   └── server.js
 │
-├── screenshots/
-├── .env.example
-├── package.json
+├── .gitignore
 └── README.md
 ```
 
@@ -94,11 +102,11 @@ University-Management-System/
 
 ## 🗄️ Core Modules
 
-- User Authentication
+- Authentication & Authorization
 - Student Management
 - Professor Management
 - Course Management
-- Attendance Management
+- Attendance Tracking
 - Marks & Results Management
 - Study Material Upload
 - Dashboard Analytics
@@ -114,54 +122,52 @@ git clone https://github.com/vatsalgajera-tech/University-Management-System.git
 cd University-Management-System
 ```
 
-### 2️⃣ Install Dependencies
+### 2️⃣ Install Backend Dependencies
 
-#### Root
 ```bash
+cd backend
 npm install
 ```
 
-#### Client
+### 3️⃣ Install Frontend Dependencies
+
 ```bash
-cd client
+cd ../frontend
 npm install
 ```
 
-#### Server
-```bash
-cd ../server
-npm install
-```
+### 4️⃣ Configure Environment Variables
 
-### 3️⃣ Configure Environment Variables
-
-Create a `.env` file in the `server` directory:
+Create a `.env` file inside the `backend/` directory.
 
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
-CLIENT_URL=http://localhost:5173
+NODE_ENV=development
 ```
 
-### 4️⃣ Run the Application
+### 5️⃣ Seed Demo Data (Optional)
 
-#### Start Backend
 ```bash
-npm run server
+cd backend
+node seed.js
 ```
 
-#### Start Frontend
-```bash
-npm run client
-```
+### 6️⃣ Run Backend Server
 
-#### Or Run Both
 ```bash
 npm run dev
 ```
 
-### 5️⃣ Open in Browser
+### 7️⃣ Run Frontend
+
+```bash
+cd ../frontend
+npm run dev
+```
+
+### 8️⃣ Open in Browser
 
 ```text
 http://localhost:5173
@@ -171,19 +177,32 @@ http://localhost:5173
 
 ## 🔐 User Roles
 
-| Role | Permissions |
-|------|-------------|
-| Admin | Full access to users, courses, and analytics |
-| Professor | Manage attendance, marks, and materials |
-| Student | View courses, attendance, results, and resources |
+| Role | Access |
+|------|--------|
+| Admin | Manage users, courses, and academic operations |
+| Professor | Upload materials, attendance, and marks |
+| Student | View courses, attendance, and results |
+
+---
+
+## 🚀 Deployment
+
+### Frontend
+Deploy using [Vercel](https://vercel.com?utm_source=chatgpt.com).
+
+### Backend
+Deploy using [Render](https://render.com?utm_source=chatgpt.com) or [Railway](https://railway.app?utm_source=chatgpt.com).
+
+### Database
+Use [MongoDB Atlas](https://www.mongodb.com/atlas?utm_source=chatgpt.com).
 
 ---
 
 ## 🚀 Future Enhancements
 
-- Online Fee Payment
-- Notifications and Email Alerts
-- Timetable Management
+- Fee Management System
+- Timetable Generator
+- Notifications & Email Alerts
 - Video Lecture Integration
 - AI-Based Performance Analytics
 
@@ -193,12 +212,12 @@ http://localhost:5173
 
 Through this project, I gained hands-on experience with:
 
-- MERN Stack Architecture
+- Full-Stack MERN Development
 - JWT Authentication
 - Protected Routes
-- Redux Toolkit State Management
-- REST API Development
-- MongoDB Schema Design
+- REST API Design
+- MongoDB Schema Modeling
+- File Uploads with Multer
 - Deployment Workflows
 
 ---
