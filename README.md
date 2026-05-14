@@ -59,8 +59,17 @@ This project demonstrates practical experience with:
 
 ## 🛠️ Tech Stack
 
+### 💻 Development Stack
+
 <p align="center">
   <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,vite,tailwind,git,github,vscode" />
+</p>
+
+### ☁️ Deployment & Hosting
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=vercel,render" />
+  <img src="https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
 </p>
 
 ---
@@ -179,22 +188,9 @@ http://localhost:5173
 
 | Role | Access |
 |------|--------|
-| Admin | Manage users, courses, and academic operations |
-| Professor | Upload materials, attendance, and marks |
-| Student | View courses, attendance, and results |
-
----
-
-## 🚀 Deployment
-
-### Frontend
-Deploy using [Vercel](https://vercel.com?utm_source=chatgpt.com).
-
-### Backend
-Deploy using [Render](https://render.com?utm_source=chatgpt.com) or [Railway](https://railway.app?utm_source=chatgpt.com).
-
-### Database
-Use [MongoDB Atlas](https://www.mongodb.com/atlas?utm_source=chatgpt.com).
+| Admin | Manage users(Professor, Students), courses, subjects, notices, leaves |
+| Professor | Manage materials, leaves, attendance and view students and notices |
+| Student | View courses, attendance, materials, profile, leaves, notices |
 
 ---
 
