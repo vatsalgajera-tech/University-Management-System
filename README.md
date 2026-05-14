@@ -59,17 +59,13 @@ This project demonstrates practical experience with:
 
 ## 🛠️ Tech Stack
 
-### 💻 Development Stack
-
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,vite,tailwind,git,github,vscode" />
+  <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,vite,tailwind,git,github,vscode,vercel" />
 </p>
 
-### ☁️ Deployment & Hosting
-
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=vercel,render" />
-  <img src="https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB%20Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
 </p>
 
 ---
