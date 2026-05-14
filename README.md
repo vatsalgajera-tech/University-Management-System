@@ -60,7 +60,9 @@ This project demonstrates practical experience with:
 ## 🛠️ Tech Stack
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,vite,tailwind,git,github,vscode,vercel,render" />
+  <img src="https://skillicons.dev/icons?i=mongodb,express,react,nodejs,vite,tailwind,git,github,vscode,vercel" />
+  <img src="https://go-skill-icons.vercel.app/api/icons?i=render" height="48" alt="Render" />
+  <img src="https://go-skill-icons.vercel.app/api/icons?i=mongodbatlas" height="48" alt="MongoDB Atlas" />
 </p>
 
 ---
