@@ -175,6 +175,9 @@ npm run dev
 http://localhost:5173
 ```
 
+📧 Demo: vatsalgajera2005@gmail.com
+🔑 Password: vatsal123
+
 ---
 
 ## 🔐 User Roles
