@@ -16,6 +16,13 @@
 
 ---
 
+🌐 [Live Demo](https://nexusuniversity.vercel.app/)
+
+📧 Demo: `vatsalgajera2005@gmail.com`
+🔑 Password: `vatsal123`
+
+---
+
 ## 📌 Overview
 
 The **University Management System** is a role-based web application designed to streamline university operations. It provides separate dashboards for **Admin**, **Professor**, and **Student** users.
@@ -174,9 +181,6 @@ npm run dev
 ```text
 http://localhost:5173
 ```
-
-📧 Demo: vatsalgajera2005@gmail.com
-🔑 Password: vatsal123
 
 ---
 
